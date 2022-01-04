@@ -31,12 +31,20 @@ class Window {
     XY *left_up_corner;
     XY *size;
 public:
+    ~Window(){
+        delete left_up_corner;
+        left_up_corner = nullptr;
+        delete size;
+        size = nullptr;
+    }
+
+
     Window(int in_left_up_corner_x, int in_left_up_corner_y, int in_x, int in_y, XY *monitor_size) {
         left_up_corner = new XY(in_left_up_corner_x, in_left_up_corner_y);
         size = new XY(in_x, in_y);
 
-        assert((monitor_size->getX() - left_up_corner->getX() - size->getX()) > 0);
-        assert((monitor_size->getY() - left_up_corner->getY() - size->getY()) > 0);
+        assert((monitor_size->getX() - left_up_corner->getX() - size->getX()) >= 0);
+        assert((monitor_size->getY() - left_up_corner->getY() - size->getY()) >= 0);
 
         std::cout << "Monitor size (" << monitor_size->getX() << ":" << monitor_size->getY() << ")" << std::endl;
         std::cout << "Created new window. Left up corner (" << left_up_corner->getX() << ":" << left_up_corner->getY()
@@ -74,6 +82,13 @@ class Monitor {
     XY *size = nullptr;
     Window *window = nullptr;
 public:
+    ~Monitor(){
+        delete window;
+        window = nullptr;
+        delete size;
+        size = nullptr;
+    }
+
     Monitor(int in_x, int in_y) {
         size = new XY(in_x, in_y);
         window = new Window(0, 0, 10, 10, size);
@@ -131,6 +146,9 @@ int main() {
         }
     } while (command != "close");
 
+
+    delete monitor;
+    monitor = nullptr;
 
     return 0;
 }
